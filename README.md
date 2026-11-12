@@ -2,6 +2,8 @@
 
 > Aplicativo desenvolvido em Flutter e Dart para a Global Solution 2026.2 – CitizenTech.
 
+Link Repositório Github: https://github.com/joavlr03/bairro_na_mesa_flutter_app
+
 ## 1. Identificação dos desenvolvedores
 
 | Nome completo | RM |
@@ -183,6 +185,69 @@ Tela de detalhes: Catálogo da feira (aberta a partir da lista de feiras).
 - **Tratamento de estados:** inicial, carregamento, sucesso e erro, com opção de tentar novamente.
 
 
+### 7.1 API mockada (`mock/server.js`)
+
+Enquanto a API Spring Boot não é publicada, o app consome um **mock** feito pelo próprio projeto. Ele implementa os mesmos endpoints e o mesmo formato JSON de [`docs/api/api-documentation.md`](docs/api/api-documentation.md), com **dados fictícios** (feiras, produtores e valores de exemplo). Trocar o mock pela API real exige mudar apenas a base URL.
+
+**Requisito:** [Node.js](https://nodejs.org) 18 ou superior. Não há dependências para instalar (usa só módulos nativos do Node).
+
+**Como executar**
+
+```powershell
+node mock/server.js
+```
+
+Deve aparecer `Mock Bairro na Mesa em http://localhost:3000`. Deixe esse terminal aberto enquanto usa o app e encerre com `Ctrl+C`. Para conferir que está no ar, abra `http://localhost:3000/api/impacto` no navegador.
+
+**Base URL por ambiente**
+
+| Onde o app roda | Base URL | Como configurar |
+|---|---|---|
+| Emulador Android | `http://10.0.2.2:3000` | Padrão, sem parâmetro |
+| Chrome / Flutter web | `http://localhost:3000` | `flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000` |
+| Celular físico (mesma rede Wi-Fi) | `http://<IP-do-PC>:3000` | `--dart-define=API_BASE_URL=http://<IP-do-PC>:3000` |
+
+No emulador, `10.0.2.2` é o endereço do computador visto de dentro do Android; `localhost` ali apontaria para o próprio emulador. O padrão fica em [`lib/core/constants/api_config.dart`](lib/core/constants/api_config.dart).
+
+**Endpoints**
+
+| Método | Caminho | O que devolve |
+|---|---|---|
+| GET | `/api/feiras` | 4 feiras, com distância, dia, horário e se tem mutirão |
+| GET | `/api/feiras/{id}/ofertas?categoria=` | Produtos da semana (um deles esgotado) |
+| GET | `/api/feiras/{id}/mutiroes` | Atendimentos do mutirão (9h00 CadÚnico, 10h30 Tarifa Social) |
+| POST | `/api/pedidos` | Cria o pré-pedido e devolve código (`BNM-0001`…), total e status |
+| GET | `/api/pedidos/{codigo}` | Consulta um pedido criado |
+| POST | `/api/triagem` | Calcula os benefícios que a pessoa pode ter direito |
+| GET | `/api/impacto` | Indicadores do painel de impacto |
+
+**Regras simuladas**
+
+- **Pedido:** exige nome, telefone e ao menos um item. Responde `400` com mensagem se faltar dado ou se um produto estiver esgotado ou sem estoque.
+- **Triagem (CadÚnico):** renda familiar total de até 3 salários mínimos (R$ 1.621 × 3 = R$ 4.863, valor de 2026, ajustável em `SALARIO_MINIMO`).
+- **Triagem (Tarifa Social de Energia):** exige estar inscrito no CadÚnico; quem tem direito ao CadÚnico também pode ter direito a ela.
+- **LGPD:** a renda é usada só no cálculo e não é guardada nem registrada em log.
+
+**Limitações**
+
+- Os pedidos ficam apenas na memória: reiniciar o mock zera os códigos e a lista de pedidos.
+- O estoque não diminui após um pedido.
+- O agendamento do mutirão não usa a API (a confirmação "Agendado!" é só na tela).
+- Não há autenticação nem banco de dados.
+
+**Testar sem o app (PowerShell)**
+
+```powershell
+Invoke-RestMethod http://localhost:3000/api/feiras
+Invoke-RestMethod -Method Post http://localhost:3000/api/triagem -ContentType 'application/json' `
+  -Body '{"pessoasNaCasa":4,"rendaFamiliar":1800,"temCadUnico":false}'
+```
+
+**Simular erro (teste dos estados do app):** encerre o mock com `Ctrl+C` e abra uma tela como Feiras. Aparecem a mensagem de falha e o botão **"Tentar de novo"**; ao subir o mock de novo, o botão recarrega os dados.
+
+> Na demonstração e nas evidências, declarar que o ambiente é o **mock local**, conforme `docs/quality/test-plan.md`.
+
+
 ## 8. Arquitetura
 
 O aplicativo separa interface (features), modelos, serviços e componentes reutilizáveis, com estado gerenciado por `setState`. A estrutura detalhada e as decisões técnicas estão em [`docs/architecture/system-architecture.md`](docs/architecture/system-architecture.md).
@@ -202,7 +267,7 @@ flutter pub get
 ### Configurar a API
 Editar a base URL em `lib/core/constants/api_config.dart`:
 - API publicada: [PREENCHER]
-- Mock local no emulador Android: `http://10.0.2.2:3000`
+- Mock local no emulador Android: `http://10.0.2.2:3000` (ver [7.1](#71-api-mockada-mockserverjs) para subir o mock com `node mock/server.js`)
 
 ### Execução
 ```powershell
@@ -238,13 +303,3 @@ Adicionar imagens reais da versão executável em `docs/delivery/screenshots/` e
 ## 12. Integridade acadêmica
 
 A implementação, as decisões e a documentação refletem o trabalho efetivamente realizado pelo integrante. Dados de feiras e produtores usados na demonstração são fictícios. Toda dependência, API, imagem ou recurso externo respeita sua licença e é identificado quando aplicável.
-
-
-
-## Rodando com o mock da API
-
-```bash
-node mock/server.js          # http://localhost:3000, dados fictícios
-flutter run                  # emulador Android usa 10.0.2.2:3000
-flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
-```
