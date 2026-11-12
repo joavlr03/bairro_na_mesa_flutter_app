@@ -1,0 +1,1081 @@
+3. Estrutura inicial do projeto
+Vamos organizar o projeto separando as responsabilidades.
+
+Crie a seguinte estrutura:
+
+lib/
+│
+├── main.dart
+│
+├── models/
+│   └── address.dart
+│
+├── services/
+│   └── address_service.dart
+│
+└── screens/
+    ├── address_list_screen.dart
+    └── address_form_screen.dart
+
+Responsabilidades:
+
+models
+   ↓
+Representação dos dados
+
+services
+   ↓
+Comunicação HTTP
+
+screens
+   ↓
+Interface do usuário
+
+4. Criar o Model
+Crie o arquivo:
+
+lib/models/address.dart
+
+Adicione:
+
+class Address {
+  final int? id;
+  final String userName;
+  final String zipCode;
+  final String street;
+  final String neighborhood;
+  final String city;
+  final String state;
+  final String type;
+
+  Address({
+    this.id,
+    required this.userName,
+    required this.zipCode,
+    required this.street,
+    required this.neighborhood,
+    required this.city,
+    required this.state,
+    required this.type,
+  });
+
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+      id: json['id'],
+      userName: json['nomeUsuario'] ?? '',
+      zipCode: json['cep'] ?? '',
+      street: json['logradouro'] ?? '',
+      neighborhood: json['bairro'] ?? '',
+      city: json['cidade'] ?? '',
+      state: json['uf'] ?? '',
+      type: json['tipo'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nomeUsuario': userName,
+      'cep': zipCode,
+      'logradouro': street,
+      'bairro': neighborhood,
+      'cidade': city,
+      'uf': state,
+      'tipo': type,
+    };
+  }
+}
+
+fromJson()
+O método fromJson() converte o JSON recebido da API em um objeto Dart.
+
+Exemplo de JSON:
+
+{
+  "id": 1,
+  "logradouro": "Avenida Paulista",
+  "cidade": "São Paulo",
+  "uf": "SP",
+  "cep": "01310-100"
+}
+
+Será convertido para:
+
+Address
+
+toJson()
+O método toJson() realiza o processo contrário.
+
+Um objeto:
+
+Address
+
+será transformado em:
+
+{
+  "logradouro": "Avenida Paulista",
+  "cidade": "São Paulo",
+  "uf": "SP",
+  "cep": "01310-100"
+}
+
+6. Criar o Service
+Agora vamos centralizar todas as requisições HTTP.
+
+Crie:
+
+lib/services/address_service.dart
+
+Adicione:
+
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+import '../models/address.dart';
+
+class AddressService {
+  static const String baseUrl =
+      'https://easy-address-app-15d989ca7c47.herokuapp.com';
+
+  static const String endpoint = '/addresses';
+
+  Future<List<Address>> getAddresses() async {
+    final response = await http.get(Uri.parse('$baseUrl$endpoint'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      return jsonList.map((json) => Address.fromJson(json)).toList();
+    }
+
+    throw Exception('Erro ao carregar endereços');
+  }
+
+  Future<Address> getAddressById(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl$endpoint/$id'));
+
+    if (response.statusCode == 200) {
+      return Address.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Endereço não encontrado');
+  }
+
+  Future<Address> createAddress(Address address) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(address.toJson()),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return Address.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Erro ao cadastrar endereço');
+  }
+
+  Future<Address> updateAddress(int id, Address address) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl$endpoint/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(address.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return Address.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Erro ao atualizar endereço');
+  }
+
+  Future<void> deleteAddress(int id) async {
+    final response = await http.delete(Uri.parse('$baseUrl$endpoint/$id'));
+
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      throw Exception('Erro ao excluir endereço');
+    }
+  }
+
+  Future<Address> getAddressByZipCode(String zipCode) async {
+    final response = await http.get(Uri.parse('$baseUrl/cep/$zipCode'));
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+
+      return Address(
+        userName: '',
+        zipCode: json['cep'] ?? '',
+        street: json['logradouro'] ?? '',
+        neighborhood: json['bairro'] ?? '',
+        city: json['cidade'] ?? '',
+        state: json['uf'] ?? '',
+        type: '',
+      );
+    }
+
+    throw Exception('CEP não encontrado');
+  }
+}
+
+
+7. Entendendo o CRUD
+Agora temos os quatro principais métodos HTTP:
+
+GET
+↓
+getAddresses()
+
+GET por ID
+↓
+getAddressById()
+
+POST
+↓
+createAddress()
+
+PUT
+↓
+updateAddress()
+
+DELETE
+↓
+deleteAddress()
+
+8. Implementar GET
+Agora vamos listar os registros retornados pela API utilizando uma ListView.
+
+Crie:
+
+lib/screens/address_list_screen.dart
+
+Adicione:
+
+import 'package:flutter/material.dart';
+
+import '../models/address.dart';
+import '../services/address_service.dart';
+
+class AddressListScreen extends StatefulWidget {
+  const AddressListScreen({super.key});
+
+  @override
+  State<AddressListScreen> createState() => _AddressListScreenState();
+}
+
+class _AddressListScreenState extends State<AddressListScreen> {
+  final AddressService service = AddressService();
+
+  List<Address> addresses = [];
+
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadAddresses();
+  }
+
+  Future<void> loadAddresses() async {
+    try {
+      final result = await service.getAddresses();
+
+      setState(() {
+        addresses = result;
+        loading = false;
+      });
+    } catch (error) {
+      setState(() {
+        loading = false;
+      });
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro: $error')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Easy Address')),
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: addresses.length,
+              itemBuilder: (context, index) {
+                final address = addresses[index];
+
+                return ListTile(
+                  title: Text(address.street),
+                  subtitle: Text('${address.city} - ${address.state}'),
+                );
+              },
+            ),
+    );
+  }
+}
+
+
+9. Configurar o main.dart
+Abra:
+
+lib/main.dart
+
+Substitua pelo código:
+
+import 'package:flutter/material.dart';
+
+import 'screens/address_list_screen.dart';
+
+void main() {
+  runApp(
+    const EasyAddressApp(),
+  );
+}
+
+class EasyAddressApp extends StatelessWidget {
+  const EasyAddressApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Easy Address',
+      theme: ThemeData(
+        colorSchemeSeed: Colors.blue,
+        useMaterial3: true,
+      ),
+      home: const AddressListScreen(),
+    );
+  }
+}
+
+Execute:
+
+flutter run
+
+Fluxo:
+
+AddressListScreen
+       ↓
+AddressService
+       ↓
+GET
+       ↓
+API
+       ↓
+JSON
+       ↓
+Address.fromJson()
+       ↓
+List<Address>
+       ↓
+ListView
+
+10. Implementar POST
+Agora vamos permitir o cadastro de um novo endereço.
+
+O fluxo será:
+
+FloatingActionButton
+        ↓
+Formulário
+        ↓
+POST
+
+Crie:
+
+lib/screens/address_form_screen.dart
+
+Adicione:
+
+import 'package:flutter/material.dart';
+
+import '../models/address.dart';
+import '../services/address_service.dart';
+
+class AddressFormScreen extends StatefulWidget {
+  final Address? address;
+
+  const AddressFormScreen({super.key, this.address});
+
+  @override
+  State<AddressFormScreen> createState() => _AddressFormScreenState();
+}
+
+class _AddressFormScreenState extends State<AddressFormScreen> {
+  final AddressService service = AddressService();
+
+  final userNameController = TextEditingController();
+  final streetController = TextEditingController();
+  final neighborhoodController = TextEditingController();
+  final cityController = TextEditingController();
+  final stateController = TextEditingController();
+  final zipCodeController = TextEditingController();
+  final typeController = TextEditingController();
+
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final address = widget.address;
+
+    if (address != null) {
+      userNameController.text = address.userName;
+      streetController.text = address.street;
+      neighborhoodController.text = address.neighborhood;
+      cityController.text = address.city;
+      stateController.text = address.state;
+      zipCodeController.text = address.zipCode;
+      typeController.text = address.type;
+    }
+  }
+
+  Future<void> save() async {
+    setState(() {
+      loading = true;
+    });
+
+    final address = Address(
+      userName: userNameController.text,
+      zipCode: zipCodeController.text,
+      street: streetController.text,
+      neighborhood: neighborhoodController.text,
+      city: cityController.text,
+      state: stateController.text,
+      type: typeController.text,
+    );
+
+    try {
+      if (widget.address == null) {
+        await service.createAddress(address);
+      } else {
+        await service.updateAddress(widget.address!.id!, address);
+      }
+
+      if (!mounted) return;
+
+      Navigator.pop(context, true);
+    } catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        loading = false;
+      });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro: $error')));
+    }
+  }
+
+  Future<void> searchZipCode() async {
+    final zipCode = zipCodeController.text.trim();
+
+    if (zipCode.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Informe um CEP')));
+
+      return;
+    }
+
+    try {
+      final address = await service.getAddressByZipCode(zipCode);
+
+      streetController.text = address.street;
+      neighborhoodController.text = address.neighborhood;
+      cityController.text = address.city;
+      stateController.text = address.state;
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao buscar CEP: $error')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final editing = widget.address != null;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(editing ? 'Editar endereço' : 'Novo endereço'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: userNameController,
+              decoration: const InputDecoration(labelText: 'Nome do usuário'),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: zipCodeController,
+              decoration: InputDecoration(
+                labelText: 'CEP',
+                hintText: '01001-000',
+                suffixIcon: IconButton(
+                  onPressed: searchZipCode,
+                  icon: const Icon(Icons.search),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: streetController,
+              decoration: const InputDecoration(labelText: 'Logradouro'),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: neighborhoodController,
+              decoration: const InputDecoration(labelText: 'Bairro'),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: cityController,
+              decoration: const InputDecoration(labelText: 'Cidade'),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: stateController,
+              decoration: const InputDecoration(labelText: 'UF'),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: typeController,
+              decoration: const InputDecoration(
+                labelText: 'Tipo',
+                hintText: 'Ex.: residencial',
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: loading ? null : save,
+                child: loading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Salvar'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    streetController.dispose();
+    neighborhoodController.dispose();
+    cityController.dispose();
+    stateController.dispose();
+    zipCodeController.dispose();
+    typeController.dispose();
+
+    super.dispose();
+  }
+}
+
+
+11. Adicionar o FloatingActionButton
+Na AddressListScreen, adicione ao Scaffold:
+
+floatingActionButton: FloatingActionButton(
+  onPressed: () async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const AddressFormScreen();
+        },
+      ),
+    );
+
+    if (result == true) {
+      loadAddresses();
+    }
+  },
+  child: const Icon(
+    Icons.add,
+  ),
+),
+
+O fluxo será:
+
+Home
+ ↓
+FloatingActionButton
+ ↓
+AddressFormScreen
+ ↓
+Preenche formulário
+ ↓
+Salvar
+ ↓
+POST
+ ↓
+API
+ ↓
+Navigator.pop()
+ ↓
+GET novamente
+ ↓
+ListView atualizada
+
+12. Implementar DELETE
+Vamos adicionar um botão de exclusão em cada item da lista.
+
+No ListTile, adicione:
+
+return ListTile(
+  title: Text(address.street),
+
+  subtitle: Text(
+    '${address.city} - ${address.state}',
+  ),
+
+  trailing: IconButton(
+    onPressed: () async {
+      if (address.id == null) {
+        return;
+      }
+
+      await service.deleteAddress(
+        address.id!,
+      );
+
+      loadAddresses();
+    },
+    icon: const Icon(
+      Icons.delete,
+    ),
+  ),
+);
+
+Fluxo:
+
+IconButton
+   ↓
+DELETE
+   ↓
+/addresses/{id}
+   ↓
+API remove
+   ↓
+GET novamente
+   ↓
+ListView atualizada
+
+13. Melhorar o DELETE com confirmação
+É uma boa prática solicitar confirmação antes de excluir um registro.
+
+Adicione:
+
+Future<void> deleteAddress(
+  Address address,
+) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text(
+          'Excluir endereço',
+        ),
+        content: const Text(
+          'Deseja realmente excluir este endereço?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(
+                context,
+                false,
+              );
+            },
+            child: const Text(
+              'Cancelar',
+            ),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(
+                context,
+                true,
+              );
+            },
+            child: const Text(
+              'Excluir',
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (confirmed != true ||
+      address.id == null) {
+    return;
+  }
+
+  await service.deleteAddress(
+    address.id!,
+  );
+
+  loadAddresses();
+}
+
+Depois, utilize:
+
+IconButton(
+  onPressed: () {
+    deleteAddress(address);
+  },
+  icon: const Icon(
+    Icons.delete,
+  ),
+)
+
+14. Implementar PUT
+Agora vamos permitir a edição de um endereço.
+
+No ListTile, podemos utilizar dois botões:
+
+Editar | Excluir
+
+Substitua o trailing por:
+
+trailing: Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    IconButton(
+      onPressed: () async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return AddressFormScreen(
+                address: address,
+              );
+            },
+          ),
+        );
+
+        if (result == true) {
+          loadAddresses();
+        }
+      },
+      icon: const Icon(
+        Icons.edit,
+      ),
+    ),
+    IconButton(
+      onPressed: () {
+        deleteAddress(address);
+      },
+      icon: const Icon(
+        Icons.delete,
+      ),
+    ),
+  ],
+),
+
+15. Como o formulário sabe se é POST ou PUT?
+A tela de formulário recebe:
+
+final Address? address;
+
+Se:
+
+address == null
+
+estamos criando um novo endereço.
+
+Novo endereço
+     ↓
+POST
+
+Se:
+
+address != null
+
+estamos editando um endereço existente.
+
+Endereço existente
+     ↓
+PUT
+
+Por isso:
+
+if (widget.address == null) {
+  await service.createAddress(address);
+} else {
+  await service.updateAddress(
+    widget.address!.id!,
+    address,
+  );
+}
+
+Dessa maneira, conseguimos reutilizar a mesma tela para cadastro e edição.
+
+16. Tela de lista completa
+A AddressListScreen completa pode ficar assim:
+
+import 'package:flutter/material.dart';
+
+import '../models/address.dart';
+import '../services/address_service.dart';
+import 'address_form_screen.dart';
+
+class AddressListScreen extends StatefulWidget {
+  const AddressListScreen({super.key});
+
+  @override
+  State<AddressListScreen> createState() =>
+      _AddressListScreenState();
+}
+
+class _AddressListScreenState
+    extends State<AddressListScreen> {
+  final AddressService service = AddressService();
+
+  List<Address> addresses = [];
+
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadAddresses();
+  }
+
+  Future<void> loadAddresses() async {
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      final result = await service.getAddresses();
+
+      setState(() {
+        addresses = result;
+        loading = false;
+      });
+    } catch (error) {
+      setState(() {
+        loading = false;
+      });
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Erro: $error',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteAddress(
+    Address address,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            'Excluir endereço',
+          ),
+          content: const Text(
+            'Deseja realmente excluir este endereço?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                  false,
+                );
+              },
+              child: const Text(
+                'Cancelar',
+              ),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                  true,
+                );
+              },
+              child: const Text(
+                'Excluir',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true ||
+        address.id == null) {
+      return;
+    }
+
+    try {
+      await service.deleteAddress(
+        address.id!,
+      );
+
+      loadAddresses();
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Erro: $error',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> editAddress(
+    Address address,
+  ) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return AddressFormScreen(
+            address: address,
+          );
+        },
+      ),
+    );
+
+    if (result == true) {
+      loadAddresses();
+    }
+  }
+
+  Future<void> createAddress() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const AddressFormScreen();
+        },
+      ),
+    );
+
+    if (result == true) {
+      loadAddresses();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Easy Address',
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: createAddress,
+        child: const Icon(
+          Icons.add,
+        ),
+      ),
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+              onRefresh: loadAddresses,
+              child: ListView.builder(
+                itemCount: addresses.length,
+                itemBuilder: (context, index) {
+                  final address = addresses[index];
+
+                  return ListTile(
+                    leading: const CircleAvatar(
+                      child: Icon(
+                        Icons.location_on,
+                      ),
+                    ),
+                    title: Text(
+                      address.street,
+                    ),
+                    subtitle: Text(
+                      '${address.city} - ${address.state}\n'
+                      '${address.zipCode}',
+                    ),
+                    isThreeLine: true,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            editAddress(
+                              address,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.edit,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            deleteAddress(
+                              address,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+    );
+  }
+}
