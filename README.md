@@ -2,6 +2,8 @@
 
 > Aplicativo desenvolvido em Flutter e Dart para a Global Solution 2026.2 – CitizenTech.
 
+Link Repositório Github: https://github.com/joavlr03/bairro_na_mesa_flutter_app
+
 ## 1. Identificação dos desenvolvedores
 
 | Nome completo | RM |
