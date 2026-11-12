@@ -25,10 +25,6 @@ O Bairro na Mesa transforma praças da periferia em pontos semanais de comida ac
 - **Objetivo da solução:** usar a praça do bairro como ponto de encontro entre quem produz, quem precisa comer e os direitos de cada cidadão
 - **ODS:** 2 (Fome zero), 10 (Redução das desigualdades), 11 (Cidades sustentáveis), 12 (Consumo responsável); ODS 1 como complemento
 
-# Bairro na Mesa – Resumo do Projeto (GS 2026.2)
-
-Nov 10, 2026 · @João Victor
-
 ## Visão geral
 
 O Bairro na Mesa transforma praças da periferia em pontos semanais de comida acessível e cidadania: uma feira de agricultores familiares e hortas comunitárias com pré-pedido pelo celular, acompanhada de um mutirão de acesso a benefícios sociais.
