@@ -8,7 +8,7 @@
 |---|---|
 | João Victor Oliveira Avellar | 550283 |
 
-Turma: [PREENCHER]
+Turma: 3SIR
 
 ## 2. Descrição da solução
 
@@ -56,7 +56,6 @@ Telas principais (navegação inferior):
 
 Tela de detalhes: Catálogo da feira (aberta a partir da lista de feiras).
 
-Diagrama completo em [`docs/architecture/navigation-flow.md`](docs/architecture/navigation-flow.md).
 
 ## 7. API / WebService
 
@@ -65,7 +64,7 @@ Diagrama completo em [`docs/architecture/navigation-flow.md`](docs/architecture/
 - **Endpoint(s) consumido(s):** `GET /api/feiras`, `GET /api/feiras/{id}/ofertas`, `POST /api/pedidos`, `GET /api/pedidos/{codigo}`, `GET /api/feiras/{id}/mutiroes`, `POST /api/triagem`, `GET /api/impacto`
 - **Dados exibidos:** feiras, produtos da semana, pedidos, agenda do mutirão, resultado da triagem e indicadores
 - **Tratamento de estados:** inicial, carregamento, sucesso e erro, com opção de tentar novamente.
-- Contrato em [`docs/api/api-documentation.md`](docs/api/api-documentation.md).
+
 
 ## 8. Arquitetura
 
@@ -123,17 +122,7 @@ Adicionar imagens reais da versão executável em `docs/delivery/screenshots/` e
 
 A implementação, as decisões e a documentação refletem o trabalho efetivamente realizado pelo integrante. Dados de feiras e produtores usados na demonstração são fictícios. Toda dependência, API, imagem ou recurso externo respeita sua licença e é identificado quando aplicável.
 
-## 13. Status da entrega
 
-- [ ] Aplicativo compila e inicia.
-- [ ] Requisitos obrigatórios foram verificados.
-- [x] Nome completo e RM preenchidos.
-- [ ] Turma preenchida.
-- [ ] Capturas reais foram adicionadas.
-- [ ] Link do GitHub foi conferido.
-- [ ] ZIP foi gerado e testado.
-- [ ] Vídeo pitch foi incluído.
-- [ ] Entrega enviada até 19/11/2026 às 23h55.
 
 ## Rodando com o mock da API
 
