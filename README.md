@@ -173,7 +173,6 @@ Tela de detalhes: Catálogo da feira (aberta a partir da lista de feiras).
 ## 7. API / WebService
 
 - **Nome:** API Bairro na Mesa (própria do projeto)
-- **Documentação:** [PREENCHER – URL do Swagger após o deploy]
 - **Endpoint(s) consumido(s):** `GET /api/feiras`, `GET /api/feiras/{id}/ofertas`, `POST /api/pedidos`, `GET /api/pedidos/{codigo}`, `GET /api/feiras/{id}/mutiroes`, `POST /api/triagem`, `GET /api/impacto`
 - **Dados exibidos:** feiras, produtos da semana, pedidos, agenda do mutirão, resultado da triagem e indicadores
 - **Tratamento de estados:** inicial, carregamento, sucesso e erro, com opção de tentar novamente.
@@ -197,7 +196,7 @@ flutter pub get
 
 ### Configurar a API
 Editar a base URL em `lib/core/constants/api_config.dart`:
-- API publicada: [PREENCHER]
+- API publicada: http://localhost:3000
 - Mock local no emulador Android: `http://10.0.2.2:3000`
 
 ### Execução
