@@ -298,8 +298,7 @@ Adicionar imagens reais da versão executável em `docs/delivery/screenshots/` e
 | Splash | <img width="661" height="997" alt="Splash" src="https://github.com/user-attachments/assets/637d2635-b170-4868-a543-82f0630b9a5f" /> |
 | Onboarding | <img width="659" height="1003" alt="Captura de tela 2026-11-12 235851" src="https://github.com/user-attachments/assets/0aa6276e-f1ac-4e19-b816-c33aeefde0d5" />
 <img width="661" height="991" alt="Captura de tela 2026-11-12 235858" src="https://github.com/user-attachments/assets/c61b40af-3465-4c71-9f65-6eb2271309fd" />
-<img width="671" height="997" alt="Captura de tela 2026-11-12 235844" src="https://github.com/user-attachments/assets/c9b0f502-7db0-4fd5-bdc3-9e23c1207df4" />
-|
+<img width="671" height="997" alt="Captura de tela 2026-11-12 235844" src="https://github.com/user-attachments/assets/c9b0f502-7db0-4fd5-bdc3-9e23c1207df4" /> |
 | Feiras | <img width="666" height="1001" alt="Captura de tela 2026-11-12 235913" src="https://github.com/user-attachments/assets/648cc2dd-bb32-461d-b4c2-4893670401f8" /> |
 | Catálogo da feira | <img width="663" height="998" alt="Captura de tela 2026-11-12 235919" src="https://github.com/user-attachments/assets/43c845dd-61e3-4764-864d-58852d978c35" /> |
 | Cesta |<img width="663" height="1004" alt="Captura de tela 2026-11-12 235934" src="https://github.com/user-attachments/assets/96eaf850-a806-4ec6-b565-e424c400b2f5" /> |
