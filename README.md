@@ -295,19 +295,14 @@ Adicionar imagens reais da versão executável em `docs/delivery/screenshots/` e
 
 | Tela | Captura |
 |---|---|
-| Splash | <img width="661" height="997" alt="Splash" src="https://github.com/user-attachments/assets/637d2635-b170-4868-a543-82f0630b9a5f" /> |
-| Onboarding | <img width="659" height="1003" alt="Captura de tela 2026-11-12 235851" src="https://github.com/user-attachments/assets/0aa6276e-f1ac-4e19-b816-c33aeefde0d5" />
-<img width="661" height="991" alt="Captura de tela 2026-11-12 235858" src="https://github.com/user-attachments/assets/c61b40af-3465-4c71-9f65-6eb2271309fd" />
-<img width="671" height="997" alt="Captura de tela 2026-11-12 235844" src="https://github.com/user-attachments/assets/c9b0f502-7db0-4fd5-bdc3-9e23c1207df4" /> |
-| Feiras | <img width="666" height="1001" alt="Captura de tela 2026-11-12 235913" src="https://github.com/user-attachments/assets/648cc2dd-bb32-461d-b4c2-4893670401f8" /> |
-| Catálogo da feira | <img width="663" height="998" alt="Captura de tela 2026-11-12 235919" src="https://github.com/user-attachments/assets/43c845dd-61e3-4764-864d-58852d978c35" /> |
-| Cesta |<img width="663" height="1004" alt="Captura de tela 2026-11-12 235934" src="https://github.com/user-attachments/assets/96eaf850-a806-4ec6-b565-e424c400b2f5" /> |
-| Meus pedidos / QR | <img width="659" height="995" alt="Captura de tela 2026-11-13 000009" src="https://github.com/user-attachments/assets/eb5fc79f-a963-4a3a-8ce5-58ef0bab6bbb" />
- <img width="669" height="1001" alt="Captura de tela 2026-11-13 000016" src="https://github.com/user-attachments/assets/bc2ef0e6-3c18-429b-b20e-a68053d18f9b" /> |
-| Mutirão e Triagem | <img width="658" height="995" alt="Captura de tela 2026-11-13 000045" src="https://github.com/user-attachments/assets/84d13f41-3776-4810-b39d-589fd14485ca" /> 
-<img width="661" height="1005" alt="Captura de tela 2026-11-13 000054" src="https://github.com/user-attachments/assets/7320a114-67de-4ec7-b0cc-79167bac71fb" />
-<img width="649" height="289" alt="Captura de tela 2026-11-13 000100" src="https://github.com/user-attachments/assets/1552772b-2b37-4696-98d1-72d732f8e6ac" /> |
-| Impacto | <img width="661" height="988" alt="Captura de tela 2026-11-13 000106" src="https://github.com/user-attachments/assets/27d78623-60c5-4fb5-8549-6e9d65c23b16" /> |
+| Splash | <img width="180" alt="Splash" src="https://github.com/user-attachments/assets/637d2635-b170-4868-a543-82f0630b9a5f" /> |
+| Onboarding | <img width="180" alt="Onboarding página 1" src="https://github.com/user-attachments/assets/c9b0f502-7db0-4fd5-bdc3-9e23c1207df4" /> <img width="180" alt="Onboarding página 2" src="https://github.com/user-attachments/assets/0aa6276e-f1ac-4e19-b816-c33aeefde0d5" /> <img width="180" alt="Onboarding página 3" src="https://github.com/user-attachments/assets/c61b40af-3465-4c71-9f65-6eb2271309fd" /> |
+| Feiras | <img width="180" alt="Feiras" src="https://github.com/user-attachments/assets/648cc2dd-bb32-461d-b4c2-4893670401f8" /> |
+| Catálogo da feira | <img width="180" alt="Catálogo da feira" src="https://github.com/user-attachments/assets/43c845dd-61e3-4764-864d-58852d978c35" /> |
+| Cesta | <img width="180" alt="Cesta" src="https://github.com/user-attachments/assets/96eaf850-a806-4ec6-b565-e424c400b2f5" /> |
+| Meus pedidos / QR | <img width="180" alt="Meus pedidos" src="https://github.com/user-attachments/assets/eb5fc79f-a963-4a3a-8ce5-58ef0bab6bbb" /> <img width="180" alt="QR de retirada" src="https://github.com/user-attachments/assets/bc2ef0e6-3c18-429b-b20e-a68053d18f9b" /> |
+| Mutirão e Triagem | <img width="180" alt="Mutirão e Triagem" src="https://github.com/user-attachments/assets/84d13f41-3776-4810-b39d-589fd14485ca" /> <img width="180" alt="Resultado da triagem" src="https://github.com/user-attachments/assets/7320a114-67de-4ec7-b0cc-79167bac71fb" /> <img width="180" alt="Agenda do mutirão" src="https://github.com/user-attachments/assets/1552772b-2b37-4696-98d1-72d732f8e6ac" /> |
+| Impacto | <img width="180" alt="Impacto" src="https://github.com/user-attachments/assets/27d78623-60c5-4fb5-8549-6e9d65c23b16" /> |
 
 ## 11. Vídeo pitch
 
