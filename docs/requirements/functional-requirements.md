@@ -6,7 +6,7 @@
 |---|---|---|---|
 | RF01 | Splash | Exibe logo, transita automaticamente e consulta preferência | Logo Bairro na Mesa; lê `skipOnboarding` |
 | RF02 | Onboarding | Possui no mínimo 3 páginas, ícone/imagem, título, descrição e avançar/voltar | 3 páginas sobre feira, cesta e direitos |
-| RF03 | Preferência | Salva opção "Não mostrar novamente" com SharedPreferences | Botão em todas as páginas salva `skipOnboarding = true` |
+| RF03 | Preferência | Salva opção "Não mostrar novamente" com SharedPreferences | Caixa "Não mostrar novamente" em todas as páginas; ao finalizar (Começar/Pular) salva `skipOnboarding = true` se marcada |
 | RF04 | Navegação | Possui no mínimo 4 telas principais, excluindo Splash/Onboarding | Feiras, Catálogo, Cesta, Meus pedidos, Mutirão e Triagem, Impacto |
 | RF05 | Parâmetros | Passa dados necessários entre telas | `Feira` para Catálogo; cesta para Cesta; `Pedido` para QR |
 | RF06 | API | Usa pacote `http` para consumir pelo menos um endpoint REST | API Spring Boot própria (mock até o deploy) |

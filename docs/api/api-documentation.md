@@ -1,26 +1,26 @@
 # Documentação da API
 
-> **Status do contrato: Proposto.** API própria do projeto, ainda não implementada. Atualizar cada endpoint para "Implementado" após testar na API real. Os exemplos abaixo definem o formato que a API Spring Boot e o mock devem seguir; não são respostas observadas.
+> **Status do contrato:** todos os endpoints estão **implementados no mock** (`mock/server.js`) e testados com o app. Na API Spring Boot (roadmap) continuam **propostos**: atualizar para "Implementado" após testar na API real. Os exemplos abaixo definem o formato que a API Spring Boot e o mock seguem.
 
 ## Identificação
 - Nome: API Bairro na Mesa (Java 21 + Spring Boot)
-- URL da documentação: [PREENCHER – Swagger/OpenAPI após o deploy]
-- Base URL (Azure): [PREENCHER após o deploy]
+- URL da documentação: este arquivo (Swagger/OpenAPI virá com a API Spring Boot)
+- Base URL (Azure): ainda não publicada (roadmap)
 - Base URL (mock local): `http://10.0.2.2:3000` no emulador Android; `http://localhost:3000` no Flutter web/desktop
 - Autenticação: endpoints do morador são públicos; JWT apenas para produtor/organizador (fora do app)
-- Data em que foi consultada: [PREENCHER]
+- Data em que foi consultada: 12/11/2026 (mock local)
 
 ## Endpoints usados pelo app
 
 | Método | Caminho | Objetivo | Tela | Status |
 |---|---|---|---|---|
-| GET | `/api/feiras?lat={lat}&lng={lng}` | Feiras ordenadas por distância | Feiras | Proposto |
-| GET | `/api/feiras/{id}/ofertas?categoria={categoria}` | Catálogo da semana da feira | Catálogo | Proposto |
-| POST | `/api/pedidos` | Criar pré-pedido | Cesta | Proposto |
-| GET | `/api/pedidos/{codigo}` | Consultar pedido e status | Meus pedidos | Proposto |
-| GET | `/api/feiras/{id}/mutiroes` | Agenda do mutirão na feira | Mutirão | Proposto |
-| POST | `/api/triagem` | Calcular benefícios possíveis (sem salvar renda) | Triagem | Proposto |
-| GET | `/api/impacto` | Indicadores do painel | Impacto | Proposto |
+| GET | `/api/feiras?lat={lat}&lng={lng}` | Feiras ordenadas por distância | Feiras | Mock implementado |
+| GET | `/api/feiras/{id}/ofertas?categoria={categoria}` | Catálogo da semana da feira | Catálogo | Mock implementado |
+| POST | `/api/pedidos` | Criar pré-pedido | Cesta | Mock implementado |
+| GET | `/api/pedidos/{codigo}` | Consultar pedido e status | Meus pedidos | Mock implementado |
+| GET | `/api/feiras/{id}/mutiroes` | Agenda do mutirão na feira | Mutirão | Mock implementado |
+| POST | `/api/triagem` | Calcular benefícios possíveis (sem salvar renda) | Triagem | Mock implementado |
+| GET | `/api/impacto` | Indicadores do painel | Impacto | Mock implementado |
 
 ## Exemplos de JSON (formato proposto)
 

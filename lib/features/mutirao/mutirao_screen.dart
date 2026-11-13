@@ -238,9 +238,11 @@ class _AgendaState extends State<_Agenda> {
     final tema = Theme.of(context);
     final cores = tema.colorScheme;
     final feira = widget.feira;
-    if (feira == null || widget.atendimentos.isEmpty) {
+    if (feira == null || !feira.temMutirao || widget.atendimentos.isEmpty) {
       return Text(
-        'Nenhum atendimento do mutirão por perto esta semana.',
+        feira != null && !feira.temMutirao
+            ? 'Esta feira não tem mutirão. Veja as feiras com o selo "Tem mutirão de direitos".'
+            : 'Nenhum atendimento do mutirão por perto esta semana.',
         style: tema.textTheme.bodyLarge,
       );
     }

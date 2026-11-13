@@ -87,15 +87,15 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
         : _ofertas.where((o) => o.categoria == _categoria).toList();
     final cesta = widget.cesta;
     return Scaffold(
+      appBar: CabecalhoTela(
+        titulo: widget.feira.praca,
+        subtitulo:
+            '${widget.feira.quando}'
+            '${widget.feira.distanciaKm == null ? '' : ' · ${formatarKm(widget.feira.distanciaKm!)}'}',
+        onVoltar: () => Navigator.of(context).pop(),
+      ),
       body: Column(
         children: [
-          CabecalhoTela(
-            titulo: widget.feira.praca,
-            subtitulo:
-                '${widget.feira.quando}'
-                '${widget.feira.distanciaKm == null ? '' : ' · ${formatarKm(widget.feira.distanciaKm!)}'}',
-            onVoltar: () => Navigator.of(context).pop(),
-          ),
           SizedBox(
             height: 64,
             child: ListView.separated(

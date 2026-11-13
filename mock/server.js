@@ -14,7 +14,13 @@ const ofertas = [
   { id: 11, produto: 'Tomate', categoria: 'LEGUMES', unidade: 'kg', preco: 6.0, estoque: 20, produtor: 'Sítio Exemplo · Mogi das Cruzes' },
   { id: 12, produto: 'Banana prata', categoria: 'FRUTAS', unidade: 'dúzia', preco: 5.0, estoque: 15, produtor: 'Sítio Exemplo · Mogi das Cruzes' },
   { id: 13, produto: 'Couve', categoria: 'VERDURAS', unidade: 'maço', preco: 3.0, estoque: 0, produtor: 'Horta Comunitária Exemplo' },
+  { id: 14, produto: 'Cenoura', categoria: 'LEGUMES', unidade: 'kg', preco: 4.5, estoque: 25, produtor: 'Sítio Exemplo · Mogi das Cruzes' },
+  { id: 15, produto: 'Laranja', categoria: 'FRUTAS', unidade: 'kg', preco: 3.5, estoque: 40, produtor: 'Chácara Exemplo · Ibiúna' },
+  { id: 16, produto: 'Ovos caipira', categoria: 'OUTROS', unidade: 'dúzia', preco: 12.0, estoque: 10, produtor: 'Chácara Exemplo · Ibiúna' },
 ];
+
+// Cada feira vende um conjunto diferente de produtos (ids de `ofertas`).
+const ofertasPorFeira = { 1: [10, 11, 12, 13], 2: [11, 12, 14, 15], 3: [10, 13, 14, 16], 4: [10, 11, 15, 16] };
 
 const mutiroes = [
   { id: 1, horario: '09:00', tipo: 'CadÚnico (CRAS)' },
@@ -48,9 +54,13 @@ http.createServer(async (req, res) => {
   if (req.method === 'GET' && p === '/api/feiras') return enviar(res, 200, feiras);
   if (req.method === 'GET' && (m = p.match(/^\/api\/feiras\/(\d+)\/ofertas$/))) {
     const cat = url.searchParams.get('categoria');
-    return enviar(res, 200, ofertas.filter((o) => !cat || o.categoria === cat));
+    const ids = ofertasPorFeira[Number(m[1])] || [];
+    return enviar(res, 200, ofertas.filter((o) => ids.includes(o.id) && (!cat || o.categoria === cat)));
   }
-  if (req.method === 'GET' && p.match(/^\/api\/feiras\/(\d+)\/mutiroes$/)) return enviar(res, 200, mutiroes);
+  if (req.method === 'GET' && (m = p.match(/^\/api\/feiras\/(\d+)\/mutiroes$/))) {
+    const feira = feiras.find((x) => x.id === Number(m[1]));
+    return enviar(res, 200, feira && feira.temMutirao ? mutiroes : []); // só feiras com mutirão têm agenda
+  }
 
   if (req.method === 'POST' && p === '/api/pedidos') {
     const b = await lerCorpo(req);

@@ -27,10 +27,6 @@ O Bairro na Mesa transforma praças da periferia em pontos semanais de comida ac
 - **Objetivo da solução:** usar a praça do bairro como ponto de encontro entre quem produz, quem precisa comer e os direitos de cada cidadão
 - **ODS:** 2 (Fome zero), 10 (Redução das desigualdades), 11 (Cidades sustentáveis), 12 (Consumo responsável); ODS 1 como complemento
 
-# Bairro na Mesa – Resumo do Projeto (GS 2026.2)
-
-Nov 10, 2026 · @João Victor
-
 ## Visão geral
 
 O Bairro na Mesa transforma praças da periferia em pontos semanais de comida acessível e cidadania: uma feira de agricultores familiares e hortas comunitárias com pré-pedido pelo celular, acompanhada de um mutirão de acesso a benefícios sociais.
@@ -111,20 +107,19 @@ O projeto atende três das ODS mais atrasadas segundo os relatórios de 2026 (2,
 
 O MVP entrega de verdade a feira com pré-pedido, a triagem de benefícios e o painel de impacto; pagamento real e integrações ficam como evolução.
 
-**Construído no MVP:**
+**Construído neste app (perfil morador, sem login):**
 
-1. Cadastro e login com perfis (morador, produtor, organizador)
-2. Mapa de feiras próximas e catálogo da semana com estoque
-3. Carrinho e pré-pedido (pagamento simulado ou na retirada)
-4. Painel do produtor com lista de separação
-5. Retirada com QR code
-6. Agenda do mutirão e triagem de benefícios com regras fixas no banco
-7. Painel de impacto e notificações
+1. Splash e onboarding de 3 páginas, com a opção "Não mostrar novamente"
+2. Lista de feiras por distância e catálogo da semana com estoque e filtro por categoria
+3. Cesta e pré-pedido (pagamento na retirada)
+4. Meus pedidos com retirada por QR code
+5. Agenda do mutirão (com agendamento simulado) e triagem de benefícios com regras fixas na API
+6. Painel de impacto
 
-**Roadmap (apresentado no pitch):** Pix real, bot no WhatsApp, triagem com IA, entregas e integração com o PNAE.
+**Roadmap (apresentado no pitch):** cadastro e login com perfis (morador, produtor, organizador), mapa de feiras (flutter\_map), painel do produtor com lista de separação, notificações (Firebase), API Spring Boot com PostgreSQL/PostGIS publicada na Azure, Pix real, bot no WhatsApp, triagem com IA, entregas e integração com o PNAE.
 
 
-App e painel falam só com a API; banco, arquivos e notificações ficam atrás dela, e o deploy é automático a cada merge.
+**Arquitetura planejada (roadmap).** Hoje o app fala com um mock em Node.js (seção 7.1); a stack abaixo é a evolução prevista. **Arquitetura planejada (roadmap).** Hoje o app fala com um mock em Node.js (seção 7.1); a stack abaixo é a evolução prevista. App e painel falam só com a API; banco, arquivos e notificações ficam atrás dela, e o deploy é automático a cada merge.
 
 | Camada | Tecnologia | Motivo |
 | --- | --- | --- |
@@ -160,11 +155,12 @@ App e painel falam só com a API; banco, arquivos e notificações ficam atrás 
 - `http` para consumo da API REST
 - `shared_preferences` para a preferência do onboarding
 - `qr_flutter` para exibir o QR do pedido
-- API Bairro na Mesa (Java 21 + Spring Boot, PostgreSQL + PostGIS, Azure)
+- Node.js 18+ para rodar o mock da API (`mock/server.js`, sem dependências)
+- Roadmap da API: Java 21 + Spring Boot, PostgreSQL + PostGIS, Azure (ainda não implementada)
 
 ## 6. Fluxo de telas
 
-`Splash → Onboarding (só na primeira vez) → Feiras → Catálogo da feira → Cesta → Meus pedidos → QR de retirada`
+`Splash → Onboarding (some se "Não mostrar novamente" estiver marcado ao concluir) → Feiras → Catálogo da feira → Cesta → Meus pedidos → QR de retirada`
 
 Telas principais (navegação inferior):
 1. Feiras
@@ -178,8 +174,7 @@ Tela de detalhes: Catálogo da feira (aberta a partir da lista de feiras).
 
 ## 7. API / WebService
 
-- **Nome:** API Bairro na Mesa (própria do projeto)
-- **Documentação:** [PREENCHER – URL do Swagger após o deploy]
+- **Nome:** API Bairro na Mesa, desenvolvida pelo próprio projeto. **Nesta entrega é um mock em Node.js** (`mock/server.js`, seção 7.1); a versão Spring Boot está no roadmap
 - **Endpoint(s) consumido(s):** `GET /api/feiras`, `GET /api/feiras/{id}/ofertas`, `POST /api/pedidos`, `GET /api/pedidos/{codigo}`, `GET /api/feiras/{id}/mutiroes`, `POST /api/triagem`, `GET /api/impacto`
 - **Dados exibidos:** feiras, produtos da semana, pedidos, agenda do mutirão, resultado da triagem e indicadores
 - **Tratamento de estados:** inicial, carregamento, sucesso e erro, com opção de tentar novamente.
@@ -187,7 +182,7 @@ Tela de detalhes: Catálogo da feira (aberta a partir da lista de feiras).
 
 ### 7.1 API mockada (`mock/server.js`)
 
-Enquanto a API Spring Boot não é publicada, o app consome um **mock** feito pelo próprio projeto. Ele implementa os mesmos endpoints e o mesmo formato JSON de [`docs/api/api-documentation.md`](docs/api/api-documentation.md), com **dados fictícios** (feiras, produtores e valores de exemplo). Trocar o mock pela API real exige mudar apenas a base URL.
+A API desta entrega é um **mock em Node.js desenvolvido pelo próprio projeto** (o enunciado permite API desenvolvida pelos alunos). Ela precisa estar rodando para o app mostrar dados; sem ela, as telas exibem a mensagem de erro e o botão "Tentar de novo". A API Spring Boot publicada fica como evolução. Ele implementa os mesmos endpoints e o mesmo formato JSON de [`docs/api/api-documentation.md`](docs/api/api-documentation.md), com **dados fictícios** (feiras, produtores e valores de exemplo). Trocar o mock pela API real exige mudar apenas a base URL.
 
 **Requisito:** [Node.js](https://nodejs.org) 18 ou superior. Não há dependências para instalar (usa só módulos nativos do Node).
 
@@ -257,6 +252,7 @@ O aplicativo separa interface (features), modelos, serviços e componentes reuti
 ### Pré-requisitos
 - Flutter SDK 3.44.1 (Dart incluído).
 - Android Studio ou VS Code com emulador Android configurado.
+- [Node.js](https://nodejs.org) 18 ou superior (para rodar o mock da API).
 
 ### Instalação (PowerShell)
 ```powershell
@@ -265,13 +261,25 @@ flutter pub get
 ```
 
 ### Configurar a API
-Editar a base URL em `lib/core/constants/api_config.dart`:
-- API publicada: [PREENCHER]
-- Mock local no emulador Android: `http://10.0.2.2:3000` (ver [7.1](#71-api-mockada-mockserverjs) para subir o mock com `node mock/server.js`)
+A base URL fica em `lib/core/constants/api_config.dart` e vale `http://10.0.2.2:3000` por padrão, que é o endereço do mock visto pelo emulador Android. Não é preciso editar nada para rodar no emulador. Para Chrome ou celular físico, veja a tabela da seção 7.1.
 
 ### Execução
+Use **dois terminais** abertos na pasta do projeto.
+
+**Terminal 1 – API (mock):**
+```powershell
+node mock/server.js
+```
+Deve aparecer `Mock Bairro na Mesa em http://localhost:3000`. Deixe aberto.
+
+**Terminal 2 – app (com o emulador Android aberto):**
 ```powershell
 flutter run
+```
+
+Sem emulador, no Chrome:
+```powershell
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
 ```
 
 ### Testes e validação

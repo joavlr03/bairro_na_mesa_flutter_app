@@ -19,13 +19,13 @@ class RetiradaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cores = Theme.of(context).colorScheme;
     return Scaffold(
+      appBar: CabecalhoTela(
+        titulo: 'Retirada do pedido',
+        subtitulo: 'Mostre este código na barraca',
+        onVoltar: () => Navigator.of(context).pop(),
+      ),
       body: Column(
         children: [
-          CabecalhoTela(
-            titulo: 'Retirada do pedido',
-            subtitulo: 'Mostre este código na barraca',
-            onVoltar: () => Navigator.of(context).pop(),
-          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),

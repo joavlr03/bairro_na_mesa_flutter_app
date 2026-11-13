@@ -25,8 +25,9 @@ class EstadoView extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (status) {
       case LoadStatus.initial:
+        return const _Carregando('Preparando…');
       case LoadStatus.loading:
-        return const Center(child: CircularProgressIndicator());
+        return const _Carregando('Carregando…');
       case LoadStatus.error:
         return _Mensagem(
           icone: Icons.wifi_off,
@@ -39,6 +40,26 @@ class EstadoView extends StatelessWidget {
         }
         return builder(context);
     }
+  }
+}
+
+class _Carregando extends StatelessWidget {
+  const _Carregando(this.texto);
+
+  final String texto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 12),
+          Text(texto),
+        ],
+      ),
+    );
   }
 }
 

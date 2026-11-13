@@ -2,9 +2,9 @@
 
 ## Ambiente
 - Flutter: 3.44.1
-- Dart: [PREENCHER com `flutter --version`]
+- Dart: 3.12.1
 - Sistema/dispositivo: Windows 11 + emulador Android [PREENCHER modelo/API level]
-- API/ambiente: [Mock local | API na Azure]
+- API/ambiente: Mock local em Node.js (`node mock/server.js`); API Spring Boot na Azure ainda não publicada
 - Data:
 
 ## Casos de teste
@@ -13,8 +13,8 @@
 |---|---|---|---|
 | T01 | Primeira abertura | Limpar dados do app e iniciar | Splash direciona ao onboarding |
 | T02 | Onboarding | Avançar e voltar entre as 3 páginas | Conteúdo e navegação corretos |
-| T03 | Não mostrar novamente | Tocar "Não mostrar novamente" (em qualquer página) e reiniciar | Splash vai direto para Feiras |
-| T03b | Começar sem salvar | Limpar dados, tocar "Começar" na página 3 e reiniciar | Onboarding aparece de novo |
+| T03 | Não mostrar novamente | Marcar a caixa "Não mostrar novamente", tocar "Começar" (ou "Pular") e reiniciar | Splash vai direto para Feiras |
+| T03b | Concluir sem marcar | Limpar dados, deixar a caixa desmarcada, tocar "Começar" na página 3 e reiniciar | Onboarding aparece de novo |
 | T04 | Navegação | Abrir as 5 abas do HomeShell | Todas acessíveis |
 | T05 | Lista → detalhes | Tocar em uma feira | Catálogo mostra a feira tocada |
 | T06 | API sucesso | Abrir Feiras com API/mock no ar | Feiras convertidas e exibidas |

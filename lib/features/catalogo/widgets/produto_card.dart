@@ -27,7 +27,7 @@ class ProdutoCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            _Foto(url: oferta.fotoUrl),
+            _Foto(url: oferta.fotoUrl, categoria: oferta.categoria),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -94,9 +94,17 @@ class ProdutoCard extends StatelessWidget {
 }
 
 class _Foto extends StatelessWidget {
-  const _Foto({this.url});
+  const _Foto({this.url, required this.categoria});
 
   final String? url;
+  final String categoria;
+
+  IconData get _icone => switch (categoria) {
+    'FRUTAS' => Icons.apple,
+    'VERDURAS' => Icons.eco_rounded,
+    'LEGUMES' => Icons.grass_rounded,
+    _ => Icons.shopping_basket_rounded,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +117,7 @@ class _Foto extends StatelessWidget {
         color: cores.primaryContainer,
         borderRadius: BorderRadius.circular(AppRadius.raioP),
       ),
-      child: Text('foto', style: Theme.of(context).textTheme.bodySmall),
+      child: Icon(_icone, color: cores.primary, size: 32),
     );
     if (url == null) return vazio;
     return ClipRRect(

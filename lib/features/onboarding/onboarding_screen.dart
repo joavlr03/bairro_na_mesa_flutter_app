@@ -39,6 +39,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _controller = PageController();
   final _prefs = OnboardingPreferencesService();
   int _pagina = 0;
+  bool _naoMostrarNovamente = false;
 
   @override
   void dispose() {
@@ -52,8 +53,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     curve: Curves.easeInOut,
   );
 
-  Future<void> _entrar({required bool salvar}) async {
-    if (salvar) await _prefs.salvarPularOnboarding();
+  /// Ao sair (Começar ou Pular), salva a preferência só se a opção estiver marcada.
+  Future<void> _entrar() async {
+    if (_naoMostrarNovamente) await _prefs.salvarPularOnboarding();
     if (!mounted) return;
     Navigator.of(
       context,
@@ -72,8 +74,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 12, top: 8),
                 child: TextButton(
-                  onPressed: () => _entrar(salvar: true),
-                  child: const Text('Não mostrar novamente'),
+                  onPressed: _entrar,
+                  child: const Text('Pular'),
                 ),
               ),
             ),
@@ -148,7 +150,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: CheckboxListTile(
+                value: _naoMostrarNovamente,
+                onChanged: (v) =>
+                    setState(() => _naoMostrarNovamente = v ?? false),
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Não mostrar novamente'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
               child: Row(
                 children: [
                   Expanded(
@@ -164,9 +177,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Expanded(
                     flex: 3,
                     child: FilledButton(
-                      onPressed: ultima
-                          ? () => _entrar(salvar: false)
-                          : () => _irPara(_pagina + 1),
+                      onPressed: ultima ? _entrar : () => _irPara(_pagina + 1),
                       child: Text(ultima ? 'Começar' : 'Avançar'),
                     ),
                   ),
